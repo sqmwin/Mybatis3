@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sqm.dao.SomeDao">
+    <!--多表单独查询-->
+    <!--被关联的查询语句的动态参数来自于resultMap指定的column给出的参数cid,而cid参数来自使用此resultMap的select查询方法selectMinisterById的动态参数mid所指定的查询数据中-->
+    <select id="selectCountryByMinisterCid" resultType="com.sqm.pojo2.Country">
+        SELECT * FROM country WHERE cid=#{minister.cid}
+    </select>
+
+    <resultMap id="ministerMap" type="com.sqm.pojo2.Minister">
+        <id column="mid" property="mid"/>
+        <result column="mname" property="mname"/>
+        <association column="cid" property="country" select="selectCountryByMinisterCid" javaType="Country"/>
+    </resultMap>
+
+    <select id="selectMinisterById" resultMap="ministerMap">
+        SELECT * FROM minister WHERE mid =#{mid}
+    </select>
+</mapper>

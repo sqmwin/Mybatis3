@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sqm.newslabel.dao.NewsLabelDao">
+    <!--递归调用同一个方法:由给出的pid获取数据,第一次pid由test给出,之后的pid由collection标签的column指定为id,递归调用-->
+    <resultMap id="childrenMap" type="NewsLabel1">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <collection column="id" property="children" ofType="NewsLabel1" select="selectChildrenByParentId"/>
+    </resultMap>
+    <!--pid的动态参数第一次来自于调用者方法的实参,之后都来自上次查询结果的id(递归)-->
+    <select id="selectChildrenByParentId" resultMap="childrenMap">
+      SELECT * FROM neswlaber WHERE pid=#{pid}
+    </select>
+
+    <!--给出id后,第一次选出此id的栏目,之后再递归调用selectChildrenByParentId,将第一次返回的id作为动态参数递归查询-->
+    <select id="selectNewsLabelById" resultMap="childrenMap">
+        SELECT * FROM neswlaber WHERE id=#{id}
+    </select>
+
+    <!--根据pid查询父栏目,递归查询-->
+    <resultMap id="parentMap" type="NewsLabel2">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <association column="pid" property="parent" javaType="NewsLabel2" select="selectParentByParentId"/>
+    </resultMap>
+    <!--根据pid查询,返回id等于此pid的数据,递归查询-->
+    <select id="selectParentByParentId" resultMap="parentMap">
+        SELECT * FROM neswlaber WHERE id=#{pid}
+    </select>
+
+</mapper>

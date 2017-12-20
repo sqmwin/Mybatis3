@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sqm.selectcourse.dao.StudentDao">
+    <!--通过sid选择学生并返回这个学生选择的课程-->
+    <resultMap id="StudentMap" type="Student">
+        <id column="sid" property="sid"/>
+        <result column="sname" property="sname"/>
+        <collection property="courses" ofType="Course">
+            <id column="cid" property="cid"/>
+            <result column="cname" property="cname"/>
+        </collection>
+    </resultMap>
+    <select id="selectStudentBySid" resultMap="StudentMap">
+        SELECT * FROM student,selectcourse,course WHERE student.sid=#{sid} AND student.sid=selectcourse.sid AND selectcourse.cid=course.cid
+    </select>
+</mapper>

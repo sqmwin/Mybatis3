@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sqm.dao.SomeDao">
+    <!--多表单独查询,查询country表的同时,使用resultMap关联到查询minister表的语句-->
+    <!--根据cid查询minister数据-->
+    <select id="selectMinisterByCid" resultType="Minister">
+        SELECT * FROM minister WHERE minister.cid=#{cid}
+    </select>
+
+    <resultMap id="countryMapper" type="Country">
+        <id column="cid" property="cid"/>
+        <result column="cname" property="cname"/>
+        <!--关联属性的映射关系-->
+        <!--集合数据来自于select属性的查询方法selectMinisterByCid;而该查询的动态sql参数来自于column属性指定的字段值-->
+        <collection property="ministers" ofType="Minister" column="cid" select="selectMinisterByCid"/>
+    </resultMap>
+
+    <!--根据id查询country表,对应的countryMapper调用查询minister表的语句-->
+    <select id="selectCountryById" resultMap="countryMapper">
+        SELECT * FROM country WHERE country.cid=#{cid}
+    </select>
+</mapper>

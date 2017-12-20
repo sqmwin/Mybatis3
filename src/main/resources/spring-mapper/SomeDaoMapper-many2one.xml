@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sqm.dao.SomeDao">
+    <!--多表连接查询-->
+    <resultMap id="ministerMap" type="com.sqm.pojo2.Minister">
+        <id column="mid" property="mid"/>
+        <result column="mname" property="mname"/>
+        <!--通过关联关系标签使Minister类中的country属性与Country类进行关联,再通过id和result指定数据库表colunm与Country类中属性的映射关系-->
+        <association property="country" javaType="com.sqm.pojo2.Country">
+            <id column="cid" property="cid"/>
+            <result column="cname" property="cname"/>
+        </association>
+    </resultMap>
+
+    <select id="selectMinisterById" resultMap="ministerMap">
+        SELECT * FROM minister,country WHERE mid =#{mid} AND minister.cid=country.cid
+    </select>
+</mapper>

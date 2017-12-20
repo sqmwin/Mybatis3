@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties resource="jdbc/jdbc.properties"/>
+
+    <typeAliases>
+        <package name="com.sqm.pojo1"/>
+        <package name="com.sqm.newslabel.pojo"/>
+        <package name="com.sqm.selectcourse.pojo"/>
+    </typeAliases>
+
+    <environments default="mysql">
+        <environment id="mysql">
+            <transactionManager type="JDBC">
+                <property name="" value=""/>
+            </transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${mysql.driver}"/>
+                <!--<property name="url" value="${country.url}"/>-->
+                <property name="url" value="${test.url}"/>
+                <property name="username" value="${mysql.username}"/>
+                <property name="password" value="${mysql.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <!--<mapper resource="spring-mapper/SomeDaoMapper-one2many.xml"/>-->
+        <!--<mapper resource="spring-mapper/SomeDaoMapper-one2many-2.xml"/>-->
+        <!--<mapper resource="spring-mapper/SomeDaoMapper-many2one.xml"/>-->
+        <!--<mapper resource="spring-mapper/SomeDaoMapper-many2one-2.xml"/>-->
+        <!--<mapper resource="spring-mapper/newslaber/NewsLabelDaoMapper1.xml"/>-->
+        <mapper resource="spring-mapper/selectcourse/StudentDaoMapper.xml"/>
+
+    </mappers>
+</configuration>
