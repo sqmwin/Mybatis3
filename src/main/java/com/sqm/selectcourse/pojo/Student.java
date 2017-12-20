@@ -1,5 +1,6 @@
 package com.sqm.selectcourse.pojo;
 
+import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Set;
  * @author sqm
  * @version 1.0
  */
-public class Student {
+public class Student implements Serializable{
     private Integer sid;
     private String sname;
     private Set<Course> courses;

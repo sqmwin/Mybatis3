@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sqm.selectcourse.dao.StudentDao">
+    <!--eviction默认为LRU(未被使用时间最长的先出缓存;flushInterval一般不指定,清空缓存的毫秒时间间隔;readOnly默认false;size为二级缓存最大的对象个数-->
+    <!--<cache eviction="FIFO" flushInterval="10800000" readOnly="true" size="512"/>-->
+    <!--设置缓存类型为ehcache缓存-->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+        <property name="maxElementsInMemory" value="5000"/>
+        <property name="timeToIdleSeconds" value="240"/>
+    </cache>
     <!--通过sid选择学生并返回这个学生选择的课程-->
     <resultMap id="StudentMap" type="Student">
         <id column="sid" property="sid"/>
@@ -13,4 +20,20 @@
     <select id="selectStudentBySid" resultMap="StudentMap">
         SELECT * FROM student,selectcourse,course WHERE student.sid=#{sid} AND student.sid=selectcourse.sid AND selectcourse.cid=course.cid
     </select>
+
+    <select id="selectStudentBySid2" resultMap="StudentMap" useCache="false">
+        SELECT * FROM student,selectcourse,course WHERE student.sid=#{sid} AND student.sid=selectcourse.sid AND selectcourse.cid=course.cid
+    </select>
+
+    <insert id="insertStudent" flushCache="false">
+        INSERT INTO student(sname) VALUES (#{sname})
+    </insert>
+
+    <delete id="deleteStudentById">
+        DELETE FROM student WHERE sid=#{arg0}
+    </delete>
+
+    <update id="updateStudent">
+        UPDATE student SET sname=#{sname} WHERE sid=#{sid}
+    </update>
 </mapper>

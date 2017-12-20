@@ -34,7 +34,9 @@ public class Test {
     public void test01() {
         int cid = 2;
         Country country = dao.selectCountryById(cid);
-        System.out.println(country.toString());
+        //此处添加断点
+        System.out.println(country.getCname());
+        System.out.println(country.getMinisters().toString());
     }
 
     //通过mid查询minister,并显示他的country

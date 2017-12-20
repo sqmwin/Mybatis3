@@ -547,7 +547,16 @@ public interface StudentDao {
 -   在setting标签中,**全局属性 lazyLoadingEnabled 的值设置为 false，那么，对于关联对象的查询，将采用直接加载**
 
     -   即在查询过主加载对象后，会马上查询关联对象
-    -   azyLoadingEnabled 的**默认值为 false**，即直接加载
+
+    -   lazyLoadingEnabled 的**默认值为 false**，即直接加载
+
+    -   ```xml
+            <!--全局参数设置-->
+            <settings>
+                <!--延迟加载总开关-->
+                <setting name="lazyLoadingEnabled" value="false"/>
+            </settings>
+        ```
 
 -   对于主配置文件中的标签顺序,是固定的;不能随便写。在\<configuration/>标签上点击 F2，可查看它们的顺序及数量要求
 
@@ -568,11 +577,63 @@ public interface StudentDao {
 #### 2. 修改测试类
 
 -   直接加载时,在断点处对country 表进行了查询，对minister 表也同时进行了查询
--   ​
+
+-   ```java
+        //通过id查询国家并显示国家信息和部长信息
+        @org.junit.Test
+        public void test01() {
+            int cid = 2;
+            Country country = dao.selectCountryById(cid);
+            //此处添加断点
+            System.out.println(country.getCname());
+            System.out.println(country.getMinisters().toString());
+    ```
 
 ### 3.2.3 深度延迟加载
 
+-   修改主配置文件的\<settings/>，将**延迟加载开关 lazyLoadingEnabled** 开启(置为 true),将侵**入式延迟加载开关 aggressiveLazyLoading**关闭(置为 false)
+
+-   ```xml
+        <!--全局参数设置-->
+        <settings>
+            <!--延迟加载总开关-->
+            <setting name="lazyLoadingEnabled" value="true"/>
+            <!--侵入式延迟加载开关-->
+            <setting name="aggressiveLazyLoading" value="false"/>
+        </settings>
+    ```
+
+-   其它代码均不作改变。此时再运行会发现，只有当代码执行到输出Minister对象详情时,底层才执行了 select 语句对 minister 表进行查询。这已经将查询推迟到了不能再推的地步， 故称为深度延迟加载
+
 ### 3.2.4 侵入式延迟加载
 
+-   修改主配置文件的\<settings/>，将延迟加载开关 lazyLoadingEnabled 开启（置为 true,将侵入式延迟加载开关 aggressiveLazyLoading也开启（置为 true，**默认为 true**）
+
+-   ```xml
+       <!--全局参数设置-->
+        <settings>
+            <!--延迟加载总开关-->
+            <setting name="lazyLoadingEnabled" value="true"/>
+            <!--侵入式延迟加载开关-->
+            <setting name="aggressiveLazyLoading" value="true"/>
+        </settings>
+    ```
+
+-   其它代码均不作改变。此时运行会发现，当代码执行断点处语句时会立即查询country表，但没未查询 minister表。说明现在的延迟加载已经启动
+
+-   但继续执行下一语句，即对 Country对象的详情进行访问时，对 minister表也进行了查询。因为该延迟策略已经**将主加载对象的关联属性值也作为主加载对象的基本信息**了，而前面已经查询出了主加载对象的基本信息，但其关联对象基本信息尚无。所以，马上进行对minister 表的查询
+
+-   该延迟策略**使关联对象的数据侵入到了主加载对象的数据中**，所以称为侵入式延迟加载
+
+-   若 lazyLoadingEnabled为 false，则 aggressiveLazyLoading 无论取何值， 均不起作用
+
+    ​
+
 ### 3.2.5 延迟加载策略总结
+
+-   | 加载策略    | lazyLoadingEnabled | aggressiveLazyLoading |
+    | ------- | ------------------ | --------------------- |
+    | 直接加载    | false              | -                     |
+    | 深度延迟加载  | true               | false                 |
+    | 侵入式延迟加载 | true               | true                  |
 

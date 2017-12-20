@@ -6,6 +6,16 @@
 <configuration>
     <properties resource="jdbc/jdbc.properties"/>
 
+    <!--全局参数设置-->
+    <settings>
+        <!--延迟加载总开关-->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!--侵入式延迟加载开关-->
+        <setting name="aggressiveLazyLoading" value="true"/>
+        <!--全局二级查询缓存开关-->
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
+
     <typeAliases>
         <package name="com.sqm.pojo1"/>
         <package name="com.sqm.newslabel.pojo"/>
@@ -33,7 +43,7 @@
         <!--<mapper resource="spring-mapper/SomeDaoMapper-many2one.xml"/>-->
         <!--<mapper resource="spring-mapper/SomeDaoMapper-many2one-2.xml"/>-->
         <!--<mapper resource="spring-mapper/newslaber/NewsLabelDaoMapper1.xml"/>-->
-        <mapper resource="spring-mapper/selectcourse/StudentDaoMapper.xml"/>
-
+        <!--<mapper resource="spring-mapper/selectcourse/StudentDaoMapper.xml"/>-->
+        <package name="com.sqm.selectcourse.dao"/>
     </mappers>
 </configuration>
